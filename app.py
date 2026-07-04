@@ -1,10 +1,16 @@
 from flask import Flask, request, jsonify
-import os
 from openai import OpenAI
+import os
 
 app = Flask(__name__)
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+SYSTEM_PROMPT = """
+You are JARVIS, a British-style AI assistant.
+You are calm, intelligent, polite, and slightly witty.
+You act like a personal assistant, not sentient, but very lifelike.
+"""
 
 @app.route("/")
 def home():
@@ -17,7 +23,7 @@ def chat():
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "You are Jarvis, a helpful AI assistant."},
+            {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_message}
         ]
     )
